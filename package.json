@@ -6,7 +6,9 @@
   "scripts": {
     "dev": "nodemon src/server.js",
     "queue": "nodemon src/queue.js",
-    "postinstall": "sequelize db:migrate"
+    "build": "sucrase ./src -d ./dist --transforms imports",
+    "postinstall": "sequelize db:migrate && build",
+    "start": "node dist/server.js"
   },
   "dependencies": {
     "@sentry/node": "5.6.1",
