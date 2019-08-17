@@ -7,7 +7,7 @@
     "dev": "nodemon src/server.js",
     "queue": "nodemon src/queue.js",
     "build": "sucrase ./src -d ./dist --transforms imports",
-    "postinstall": "sequelize db:migrate && build",
+    "postinstall": "sequelize db:migrate",
     "start": "node dist/server.js"
   },
   "dependencies": {
