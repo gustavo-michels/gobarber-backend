@@ -4,6 +4,7 @@ import User from '../models/User';
 import Appointment from '../models/Appointment';
 
 import Cache from '../../lib/Cache';
+import CustomException from '../../lib/CustomException';
 
 // import CancellationMail from '../jobs/CancellationMail';
 // import Queue from '../../lib/Queue';
@@ -26,13 +27,17 @@ class CancelAppointmentService {
     });
 
     if (appointment.user_id !== user_id) {
-      throw new Error("You don't have permission to cancel this appointment.");
+      throw new CustomException(
+        "You don't have permission to cancel this appointment."
+      );
     }
 
     const dateWithSub = subHours(appointment.date, 2);
 
     if (isBefore(dateWithSub, new Date())) {
-      throw new Error('You can only cancel appointments 2 hours in advance.');
+      throw new CustomException(
+        'You can only cancel appointments 2 hours in advance.'
+      );
     }
 
     appointment.canceled_at = new Date();

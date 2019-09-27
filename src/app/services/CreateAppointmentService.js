@@ -7,6 +7,7 @@ import Appointment from '../models/Appointment';
 import Notification from '../Schemas/Notification';
 
 import Cache from '../../lib/Cache';
+import CustomException from '../../lib/CustomException';
 
 class CreateAppointmentService {
   async run({ provider_id, user_id, date }) {
@@ -18,14 +19,16 @@ class CreateAppointmentService {
     });
 
     if (!isProvider) {
-      throw new Error('You can only create appointments with providers');
+      throw new CustomException(
+        'You can only create appointments with providers'
+      );
     }
 
     /*
   Check if user and provider aren't same.
   */
     if (provider_id === user_id) {
-      throw new Error('You cannot schedule with yourself');
+      throw new CustomException('You cannot schedule with yourself');
     }
 
     /*
@@ -34,7 +37,7 @@ class CreateAppointmentService {
     const hourStart = startOfHour(parseISO(date));
 
     if (isBefore(hourStart, new Date())) {
-      throw new Error('Past dates are not permitted');
+      throw new CustomException('Past dates are not permitted');
     }
 
     /*
@@ -49,7 +52,7 @@ class CreateAppointmentService {
     });
 
     if (checkAvailability) {
-      throw new Error('Appointment date is not available');
+      throw new CustomException('Appointment date is not available');
     }
 
     const appointment = await Appointment.create({

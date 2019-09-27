@@ -42,6 +42,10 @@ class App {
       if (process.env.NODE_ENV === 'development') {
         const errors = await new Youch(err, req).toJSON();
 
+        if (err.status !== 500) {
+          return res.status(err.status).json(errors);
+        }
+
         return res.status(500).json(errors);
       }
 
